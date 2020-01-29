@@ -1,0 +1,62 @@
+##Creating dataset for classification purpuse
+# features(1 sim,0 não)
+
+#longo?
+#perna curta?
+#late?
+
+porco1 = [0,1,0]
+porco2 = [0,1,1]
+porco3 = [1,1,0]
+
+cachorro1 = [0,1,1]
+cachorro2 = [1,0,1]
+cachorro3 = [1,1,1]
+
+# 1 = porco, 0 = cachorro
+treino_x = [porco1,porco2,porco3,cachorro1,cachorro2,cachorro3]
+treino_y = [1,1,1,0,0,0] # labels ou etiqueta
+
+## importing library and training the algorithm
+from sklearn.svm import LinearSVC
+#LinearSVC é uma classe da lib. Portanto se faz necessario instancia-la para criação de modelos
+
+model = LinearSVC()
+model.fit(treino_x,treino_y)
+# fit serve para treinar o algoritmo com base nos dados de treino e nos labels desses dados que passara
+# lembrar que sera etapa de treino com supervisão apenas. Os valores de cada feature foram passados antes
+
+## creating data for test with trained algorithm
+animal_misterioso = [1,1,1]
+model.predict([animal_misterioso])
+
+## creating more data for tests with same algorithm
+misterio1 = [1,1,1]
+misterio2 = [1,1,0]
+misterio3 = [0,1,1]
+
+## creating list for tests using algorithm
+teste_x = [misterio1,misterio2,misterio3] # dados de teste para avaliarmos o algoritmo
+teste_y = [0,1,1] # dados originais ja observados e supervisionados para comparação
+
+## predcting the classificiation for tes
+previsoes = model.predict(teste_x)
+
+## direct comparison between predicting data and given data
+previsoes == teste_x
+# previsoes retorna array e testes_claases seria uma lista.
+# isso acontece devido ao numpy funcionar no bckground da sklearn
+
+## checking the accuraccy of algorithm predicting data
+corretos = (previsoes == teste_y).sum()
+# com numpy background se torna possivel comparação direta entre arrays e listas
+total = len(teste_x)
+taxa_acerto = corretos/total
+print("Taxa de acerto: %.2f" % (taxa_acerto * 100))
+
+## using now the metrics package to check the accuracy from algorithm
+from sklearn.metrics import accuracy_score
+# em caso de nao repetição, a sklearn ja fornece a metrica de accuracy pronta do modelo, vide import acima
+
+taxa_de_acerto = accuracy_score(teste_y,previsoes)
+print("Taxa de acerto: %.2f" % (taxa_de_acerto * 100))
